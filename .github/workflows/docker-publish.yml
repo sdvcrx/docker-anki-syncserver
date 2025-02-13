@@ -35,6 +35,9 @@ jobs:
         run: |
           wget 'https://github.com/ankitects/anki/raw/refs/heads/main/docs/syncserver/Dockerfile' 'https://github.com/ankitects/anki/raw/refs/heads/main/docs/syncserver/entrypoint.sh'
 
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2.3.0
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
