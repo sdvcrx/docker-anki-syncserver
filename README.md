@@ -21,7 +21,7 @@ docker pull ghcr.io/sdvcrx/anki-syncserver:25.02
 
 ### CLI
 
-Please reference [Anki Sync Server docs](https://github.com/ankitects/anki/tree/main/docs/syncserver#run-container) .
+Please reference [Anki Sync Server docs](https://github.com/ankitects/anki/tree/main/docs/syncserver#run-container) and [Anki Manual](https://docs.ankiweb.net/sync-server.html) .
 
 Example: 
 
