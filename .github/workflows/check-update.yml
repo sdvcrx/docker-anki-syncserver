@@ -1,0 +1,32 @@
+name: Check Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 9 * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+
+      - name: Setup ssh agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+
+      - name: Check update
+        run: |
+          git config --global user.email "memory.silentvoyage@gmail.com"
+          git config --global user.name "sdvcrx-bot"
+          CURRENT_TAG=$(grep ANKI_VERSION .env | cut -d '=' -f 2)
+          LATEST_TAG=$(curl -m 10 --retry 5 --silent "https://api.github.com/repos/ankitects/anki/releases" | jq -r '.[0].tag_name')
+          if [ "$CURRENT_TAG" = "$LATEST_TAG" ]; then echo "latest tag is same => $CURRENT_TAG" && exit 0; fi
+          sed -i "s|$CURRENT_TAG|$LATEST_TAG|g" .env
+          git add .env && git commit -m "Update anki version to $LATEST_TAG"
+          git tag -a "$LATEST_TAG" -m "$LATEST_TAG"
+          git push && git push --tags
