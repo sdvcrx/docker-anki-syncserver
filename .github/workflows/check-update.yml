@@ -24,7 +24,7 @@ jobs:
           git config --global user.email "memory.silentvoyage@gmail.com"
           git config --global user.name "sdvcrx-bot"
           CURRENT_TAG=$(grep ANKI_VERSION .env | cut -d '=' -f 2)
-          LATEST_TAG=$(curl -m 10 --retry 5 --silent "https://api.github.com/repos/ankitects/anki/releases" | jq -r '.[0].tag_name')
+          LATEST_TAG=$(curl -m 10 --retry 5 --silent "https://api.github.com/repos/ankitects/anki/releases" | jq -r 'map(select(.prerelease != true)) | first | .tag_name')
           if [ "$CURRENT_TAG" = "$LATEST_TAG" ]; then echo "latest tag is same => $CURRENT_TAG" && exit 0; fi
           sed -i "s|$CURRENT_TAG|$LATEST_TAG|g" .env
           git add .env && git commit -m "Update anki version to $LATEST_TAG"
